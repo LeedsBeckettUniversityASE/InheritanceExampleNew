@@ -8,27 +8,9 @@ The examples use circles, squares, rectangles, and triangles. As you read each s
 
 The stages below are in chronological order, from the oldest commit to the newest. Each entry describes the design before the commit, what changed, and the software engineering idea to take away.
 
-### 1. Add `.gitattributes`, `.gitignore`, and `README.md`
 
-**Before:** The repository had no project-specific source code or introductory documentation.
 
-**Change:** The commit added Git configuration for line-ending normalization, ignored common Visual Studio user and build files, and created the original minimal README.
-
-**Why it helped:** These files make collaboration more predictable: generated files are less likely to clutter commits, and line endings are normalized across environments.
-
-**Concept:** Repository hygiene and version-control configuration are part of maintaining a software project, even though they do not change application behavior.
-
-### 2. Add project files
-
-**Before:** The repository had configuration and documentation, but no runnable application.
-
-**Change:** A .NET 8 Windows Forms solution was added, including its project, startup code, and an initial form with its designer and resources.
-
-**Why it helped:** This established the application structure and a place to build the examples incrementally.
-
-**Concept:** A working application starts with a framework and entry point. The later shape examples are additions to this scaffold, not standalone programs.
-
-### 3. Example 1 with no inheritance
+### Example 1 with no inheritance
 
 **Before:** The project contained a basic form but no shape model.
 
@@ -38,17 +20,17 @@ The stages below are in chronological order, from the oldest commit to the newes
 
 **Concept:** This is a useful baseline for recognizing duplication. Separate classes work, but changes to common behavior may need to be repeated in every shape class.
 
-### 4. Example 2 with inheritance for shape classes
+### Example 2 with inheritance for shape classes
 
-**Before:** `Circle` and `Rect` independently stored common state and repeated common behavior.
+**Before:** `Circle` and `Rect` independently stored common state and repeated common behaviour.
 
-**Change:** A `Shape` base class was added to hold shared colour and position data and common drawing/description behavior. `Circle` and `Rect` inherited from it, passed shared values to the base constructor, and kept their own dimensions and shape-specific drawing.
+**Change:** A `Shape` base class was added to hold shared colour and position data and common drawing/description behaviour. `Circle` and `Rect` inherited from it, passed shared values to the base constructor and kept their own dimensions and shape-specific drawing.
 
-**Why it helped:** Common implementation moved into one place. A derived shape could reuse that behavior while specializing the parts that differ.
+**Why it helped:** Common implementation moved into one place. A derived shape could reuse that behaviour while specialising the parts that differ.
 
 **Concept:** Inheritance models an “is-a” relationship: a circle and rectangle are both shapes. It also enables code reuse and is the foundation for treating different derived objects through a common base type.
 
-### 5. Example 3 made handling code simpler
+### Example 3 made handling code simpler
 
 **Before:** The form held separate collections for circles and rectangles and needed a separate loop and variable for each type.
 
@@ -58,17 +40,19 @@ The stages below are in chronological order, from the oldest commit to the newes
 
 **Concept:** This demonstrates polymorphism: code can work through a common base type while the actual derived object supplies its specialized drawing implementation.
 
-### 6. Example 4 making it draw random shapes
+**Note** The rectangle has gone behind thge circle (you can just about see it poking out), this is because before it rendered the shapes in two loops, doing the circles first and then the single rectangle. Now the last circle is rendered after the rectangle because that is where it is in the shapes ArrayList. You'd have to add it at the end to see it.
+
+### Example 4 making it draw random shapes
 
 **Before:** The form added a small, fixed set of example shapes.
 
-**Change:** The example began generating many shapes with randomized positions, dimensions, and colours. `Square` and `Triangle` were added alongside circles and rectangles, and area calculation was introduced for shapes.
+**Change:** The example began generating many shapes with randomised positions, dimensions, and colours. `Square` and `Triangle` were added alongside circles and rectangles, and area calculation was introduced for shapes.
 
-**Why it helped:** The example now exercised the shared handling code across a broader and less predictable collection of shape objects.
+**Why it helped:** The example now exercised the shared handling code across a broader and less predictable collection of shape objects. It also shows that paint draws somethinmg else when it is called whedn the window is shrunk and brought back on.
 
-**Concept:** This stage illustrates extensibility through polymorphism: new derived types can join the same handling flow. It also exposes a limitation of `ArrayList`: it accepts any object, so an unrelated value can accidentally enter the collection.
+**Concept:** This stage illustrates extensibility through polymorphism: new derived types can join the same handling flow. It also exposes a limitation of `ArrayList`: it accepts any object, so an unrelated value can accidentally enter the collection. i.e. if we add(new String("hello")) we will get a run time error when it tries to cast it to a Shape and can't.
 
-### 7. Example 5 restricting what goes into the list of shapes
+### Example 5 restricting what goes into the list of shapes
 
 **Before:** The non-generic `ArrayList` could contain arbitrary values, and retrieving items required casts. The random-shape example even included a string that was not a shape.
 
@@ -78,7 +62,7 @@ The stages below are in chronological order, from the oldest commit to the newes
 
 **Concept:** Generic collections provide compile-time type safety. A well-chosen type communicates and enforces an invariant: every item in this list can be handled as a `Shape`.
 
-### 8. Example 5 improving the drawing
+### Example 5 part 2 improving the drawing
 
 **Before:** The form drew every shape directly whenever its paint handler ran. Windows may request repainting more than once.
 
@@ -88,7 +72,7 @@ The stages below are in chronological order, from the oldest commit to the newes
 
 **Concept:** This is a basic caching/rendering strategy: do expensive or repeatable preparation once, then reuse the result when the UI needs to repaint.
 
-### 9. Example 6 abstract methods and classes
+### Example 6 abstract methods and classes
 
 **Before:** `Shape` could be instantiated even though a general shape does not have enough information to define a meaningful area. Its default area method returned `0`, which could conceal a missing implementation.
 
@@ -98,7 +82,7 @@ The stages below are in chronological order, from the oldest commit to the newes
 
 **Concept:** Abstract classes can share state and implemented behavior while leaving essential operations to subclasses. Abstract methods turn that expectation into a compiler-checked obligation.
 
-### 10. Example 7 Added an Interface
+### Example 7 Added an Interface
 
 **Before:** The abstract `Shape` base class was the shared way to refer to objects that could be drawn and have their area calculated.
 
